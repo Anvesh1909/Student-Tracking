@@ -12,14 +12,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python deps
-COPY backend/requirements.txt /app/requirements.txt
+# 1️⃣ Copy only requirements first (better for Docker cache)
+COPY requirements.txt /app/requirements.txt
+
+# 2️⃣ Install Python deps
 RUN pip install --upgrade pip && pip install -r /app/requirements.txt
 
-# Copy code
+# 3️⃣ Copy the rest of the code
 COPY . /app
 
-# Create a non-root user
+# 4️⃣ Create a non-root user
 RUN useradd --create-home appuser || true
 RUN chown -R appuser:appuser /app
 USER appuser
