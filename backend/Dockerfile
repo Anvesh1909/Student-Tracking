@@ -5,23 +5,26 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# System deps for building / postgres client
+# System deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# 1️⃣ Copy only requirements first (better for Docker cache)
+# 1) Copy only requirements first for better caching
 COPY requirements.txt /app/requirements.txt
 
-# 2️⃣ Install Python deps
+# 2) Install Python deps
 RUN pip install --upgrade pip && pip install -r /app/requirements.txt
 
-# 3️⃣ Copy the rest of the code
+# 3) Copy rest of the repo
 COPY . /app
 
-# 4️⃣ Create a non-root user
+# 4) Make sure entrypoint is executable
+RUN chmod +x /app/entrypoint.sh || true
+
+# 5) Non-root user
 RUN useradd --create-home appuser || true
 RUN chown -R appuser:appuser /app
 USER appuser

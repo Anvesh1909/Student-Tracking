@@ -1,16 +1,26 @@
-# Build stage
+# ---------- Build stage ----------
 FROM node:18-alpine AS build
+
 WORKDIR /app
 
-COPY student-frontend/package*.json ./
-RUN npm install --legacy-peer-deps
+# 1) Install deps
+COPY package*.json ./
+RUN npm ci --legacy-peer-deps
 
-COPY student-frontend/ .
+# 2) Copy app and build
+COPY . .
 RUN npm run build
 
-# Production stage - nginx
+# ---------- Nginx stage ----------
 FROM nginx:stable-alpine
+
+# Remove default config and use our own if you have one
+RUN rm /etc/nginx/conf.d/default.conf || true
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy built assets
 COPY --from=build /app/dist /usr/share/nginx/html
-COPY student-frontend/nginx.conf /etc/nginx/conf.d/default.conf
+# If CRA: use /app/build instead of /app/dist
+
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
