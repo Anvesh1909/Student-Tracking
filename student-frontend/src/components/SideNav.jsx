@@ -65,6 +65,7 @@ export default function SideNav() {
     { to: "/dashboard", label: "Dashboard", icon: "bi-speedometer2", visible: true },
     { to: "/student-list", label: "Students", icon: "bi-people", visible: true },
     { to: "/assessments", label: "Assessments", icon: "bi-journal-check", visible: true },
+    { to: "/assessments-create", label: "Create Assessment", icon: "bi-journal-plus", visible: isAdminOrTeacher },
     { to: "/batches", label: "Batches", icon: "bi-folder2-open", visible: isAdminOrTeacher },
     { to: "/attendance-bulk", label: "Attendance", icon: "bi-list-check", visible: isAdminOrTeacher },
     { to: "/analytics", label: "Analytics", icon: "bi-graph-up", visible: isAdminOrTeacher },

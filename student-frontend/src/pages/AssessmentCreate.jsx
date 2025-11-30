@@ -4,7 +4,6 @@ import API from "../api";
 import { Survey } from "survey-react-ui";
 import { Model } from "survey-core";
 
-// a small helper to show raw JSON errors
 function tryParseJSON(s) {
   try {
     return [JSON.parse(s), null];
@@ -13,10 +12,6 @@ function tryParseJSON(s) {
   }
 }
 
-/**
- * Extract correct answers & scores into a separate key,
- * and strip them from the questionnaire JSON.
- */
 function extractAnswerKey(questionnaire) {
   const copy = JSON.parse(JSON.stringify(questionnaire));
   const answerKey = {};
@@ -139,7 +134,6 @@ export default function AssessmentCreate({ initial }) {
       return;
     }
 
-    // Extract answer_key & clean questionnaire
     const { cleanQuestionnaire, answerKey, totalMarks } =
       extractAnswerKey(questionnaireParsed);
 
@@ -150,7 +144,6 @@ export default function AssessmentCreate({ initial }) {
       questionnaire: cleanQuestionnaire,
       answer_key: answerKey,
       total_marks: totalMarks,
-      // add test_type if you want: test_type: "unit"
     };
 
     try {
@@ -166,7 +159,7 @@ export default function AssessmentCreate({ initial }) {
   }
 
   return (
-    <div className="container my-4">
+    <div className="container-fluid py-3">
       <h2 className="mb-4">Create / Edit Assessment</h2>
 
       {error && (
@@ -179,7 +172,7 @@ export default function AssessmentCreate({ initial }) {
 
       <div className="row">
         {/* Left column: form fields */}
-        <div className="col-md-6 mb-4">
+        <div className="col-md-4 mb-4">
           <div className="mb-3">
             <label className="form-label">Title</label>
             <input
@@ -231,52 +224,76 @@ export default function AssessmentCreate({ initial }) {
           </div>
         </div>
 
-        {/* Right column: questionnaire JSON editor */}
-        <div className="col-md-6 mb-4">
-          <div className="mb-2 d-flex justify-content-between align-items-center">
-            <label className="form-label mb-0">
-              Questionnaire (SurveyJS JSON)
-            </label>
-            <button
-              type="button"
-              className="btn btn-sm btn-outline-secondary"
-              onClick={updatePreview}
+        {/* Right column: questionnaire JSON + preview stacked, both scrollable */}
+        <div className="col-md-8 mb-4 d-flex flex-column gap-3">
+          {/* JSON editor with larger internal scroll area */}
+          <div className="card flex-grow-1">
+            <div className="card-header d-flex justify-content-between align-items-center">
+              <span>Questionnaire (SurveyJS JSON)</span>
+              <button
+                type="button"
+                className="btn btn-sm btn-outline-secondary"
+                onClick={updatePreview}
+              >
+                Update Preview
+              </button>
+            </div>
+            <div
+              className="card-body p-0 overflow-auto"
+              style={{
+                maxHeight: "60vh", // ↑ increased height (~2x)
+                minHeight: "40vh",
+              }}
             >
-              Update Preview
-            </button>
+              <textarea
+                className="form-control border-0 rounded-0 h-100"
+                value={questionnaireRaw}
+                onChange={(e) => setQuestionnaireRaw(e.target.value)}
+                style={{
+                  fontFamily: "monospace",
+                  resize: "none",
+                }}
+              />
+            </div>
           </div>
-          <textarea
-            className="form-control"
-            value={questionnaireRaw}
-            onChange={(e) => setQuestionnaireRaw(e.target.value)}
-            rows={18}
-            style={{ fontFamily: "monospace" }}
-          />
-        </div>
-      </div>
 
-      {/* Preview card */}
-      <div className="card mt-3">
-        <div className="card-header">
-          <h5 className="card-title mb-0">Teacher Preview</h5>
-        </div>
-        <div className="card-body">
-          {previewModel ? (
-            <>
-              <Survey model={previewModel} />
-              <p className="mt-3 mb-0 text-muted" style={{ fontSize: "0.85rem" }}>
-                This is the <strong>teacher view</strong>. You can define{" "}
-                <code>correctAnswer</code>, <code>correctAnswers</code> and{" "}
-                <code>score</code> in the JSON above.
-                <br />
-                Before saving, those values are extracted into{" "}
-                <code>answer_key</code> and removed from{" "}
-                <code>questionnaire</code>, so students never see the answers.
-              </p>
-            </>
-          ) : (
-            <div className="text-muted">No preview (invalid JSON)</div>
-          )}
+          {/* Preview card with bigger visible area */}
+          <div className="card flex-grow-1">
+            <div className="card-header">
+              <h5 className="card-title mb-0">Teacher Preview</h5>
+            </div>
+            <div
+              className="card-body overflow-auto"
+              style={{
+                maxHeight: "70vh", // ↑ much taller preview
+                minHeight: "50vh",
+              }}
+            >
+              {previewModel ? (
+                <>
+                  {/* fs-5 = larger font with Bootstrap */}
+                  <div className="fs-5">
+                    <Survey model={previewModel} />
+                  </div>
+                  <p
+                    className="mt-3 mb-0 text-muted"
+                    style={{ fontSize: "0.9rem" }}
+                  >
+                    This is the <strong>teacher view</strong>. You can define{" "}
+                    <code>correctAnswer</code>, <code>correctAnswers</code> and{" "}
+                    <code>score</code> in the JSON above.
+                    <br />
+                    Before saving, those values are extracted into{" "}
+                    <code>answer_key</code> and removed from{" "}
+                    <code>questionnaire</code>, so students never see the
+                    answers.
+                  </p>
+                </>
+              ) : (
+                <div className="text-muted">No preview (invalid JSON)</div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
