@@ -1,0 +1,12 @@
+# Top-level ignores
+.git
+.env
+.env.*
+node_modules
+venv
+*.pyc
+__pycache__
+build
+dist
+*.sqlite3
+*.log
