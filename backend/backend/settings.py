@@ -190,6 +190,7 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
+INVITATION_EMAIL_ENABLED = os.getenv("INVITATION_EMAIL_ENABLED", "False").lower() == "true"
 
 # Frontend URL for invitation links
 FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:5173')

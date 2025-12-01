@@ -132,41 +132,39 @@ class InvitationView(APIView):
 
     def post(self, request):
         """
-        Create an invitation and send email.
+        Create an invitation and (optionally) send email.
 
-        - Uses settings.FRONTEND_BASE_URL by default (e.g. http://localhost:5173)
+        - Uses settings.FRONTEND_BASE_URL by default
         - Allows optional override via request.data["frontend_url"]
+        - Always returns the invitation_url in the response
         """
-        # allow frontend to pass an optional frontend_url override
         frontend_url_override = request.data.get("frontend_url")
 
-        # Fallback to settings.FRONTEND_BASE_URL if not provided in request
         frontend_base_url = frontend_url_override or getattr(
             settings,
             "FRONTEND_BASE_URL",
-            "http://localhost:5173",  # last-resort fallback
+            "http://localhost:5173",
         )
 
         serializer = InvitationSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         invitation = serializer.save()
 
-        # Pass the resolved frontend_base_url to email helper
+        # Will respect settings.INVITATION_EMAIL_ENABLED internally
         email_sent, invitation_url = send_invitation_email(
             invitation,
             frontend_url=frontend_base_url,
         )
 
         response_data = serializer.data
-        response_data["invitation_url"] = invitation_url  # helpful for frontend/testing
+        response_data["invitation_url"] = invitation_url
+        response_data["email_enabled"] = getattr(settings, "INVITATION_EMAIL_ENABLED", False)
+        response_data["email_sent"] = email_sent
 
-        if not email_sent:
-          response_data["email_sent"] = False
-          response_data[
-              "email_error"
-          ] = "Failed to send invitation email. Please check email configuration."
-        else:
-          response_data["email_sent"] = True
+        if response_data["email_enabled"] and not email_sent:
+            response_data[
+                "email_error"
+            ] = "Failed to send invitation email. Please check email configuration."
 
         return Response(response_data, status=status.HTTP_201_CREATED)
     
