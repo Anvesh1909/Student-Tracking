@@ -86,7 +86,6 @@ export default function AssessmentCreate({ initial }) {
   const [batches, setBatches] = useState([]);
   const [loadingBatches, setLoadingBatches] = useState(false);
 
-  // Load batches for select
   useEffect(() => {
     async function loadBatches() {
       setLoadingBatches(true);
@@ -113,11 +112,10 @@ export default function AssessmentCreate({ initial }) {
       return;
     }
     setError(null);
-    const model = new Model(q); // teacher preview shows everything
+    const model = new Model(q);
     setPreviewModel(model);
   }
 
-  // Initial preview on mount
   useEffect(() => {
     updatePreview();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -151,7 +149,6 @@ export default function AssessmentCreate({ initial }) {
       console.log("Saved assessment", res.data);
       setSaving(false);
       alert("Saved assessment");
-      // navigate("/assessments");
     } catch (err) {
       setError(err?.response?.data || err.message);
       setSaving(false);
@@ -159,7 +156,7 @@ export default function AssessmentCreate({ initial }) {
   }
 
   return (
-    <div className="container-fluid py-3">
+    <div className="container-fluid py-3 assessment-create-page">
       <h2 className="mb-4">Create / Edit Assessment</h2>
 
       {error && (
@@ -224,9 +221,9 @@ export default function AssessmentCreate({ initial }) {
           </div>
         </div>
 
-        {/* Right column: questionnaire JSON + preview stacked, both scrollable */}
+        {/* Right column */}
         <div className="col-md-8 mb-4 d-flex flex-column gap-3">
-          {/* JSON editor with larger internal scroll area */}
+          {/* JSON editor */}
           <div className="card flex-grow-1">
             <div className="card-header d-flex justify-content-between align-items-center">
               <span>Questionnaire (SurveyJS JSON)</span>
@@ -238,13 +235,7 @@ export default function AssessmentCreate({ initial }) {
                 Update Preview
               </button>
             </div>
-            <div
-              className="card-body p-0 overflow-auto"
-              style={{
-                maxHeight: "60vh", // ↑ increased height (~2x)
-                minHeight: "40vh",
-              }}
-            >
+            <div className="card-body p-0 assessment-json-body">
               <textarea
                 className="form-control border-0 rounded-0 h-100"
                 value={questionnaireRaw}
@@ -257,21 +248,14 @@ export default function AssessmentCreate({ initial }) {
             </div>
           </div>
 
-          {/* Preview card with bigger visible area */}
+          {/* Preview */}
           <div className="card flex-grow-1">
             <div className="card-header">
               <h5 className="card-title mb-0">Teacher Preview</h5>
             </div>
-            <div
-              className="card-body overflow-auto"
-              style={{
-                maxHeight: "70vh", // ↑ much taller preview
-                minHeight: "50vh",
-              }}
-            >
+            <div className="card-body assessment-preview-body">
               {previewModel ? (
                 <>
-                  {/* fs-5 = larger font with Bootstrap */}
                   <div className="fs-5">
                     <Survey model={previewModel} />
                   </div>

@@ -188,7 +188,8 @@ EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
 
 # Frontend URL for invitation links
 FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:5173')
@@ -206,8 +207,5 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD = True
 
 SITE_NAME = os.getenv('SITE_NAME', 'Student Learning & Performance Tracking Platform')
-# Site name
-SITE_NAME = 'Student Learning & Performance Tracking Platform'
-
 
 FRONTEND_BASE_URL = os.environ.get("FRONTEND_BASE_URL", "http://localhost:5173")
