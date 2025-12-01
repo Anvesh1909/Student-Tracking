@@ -29,7 +29,7 @@ export default function AcceptInvitation() {
 
   async function loadBatches() {
     try {
-      const res = await API.get("/students/batches/");
+      const res = await API.get("students/batches/");
       const list = extractListFromResponse(res);
       setBatches(list);
     } catch (err) {

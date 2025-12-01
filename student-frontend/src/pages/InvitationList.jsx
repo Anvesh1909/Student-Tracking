@@ -21,7 +21,7 @@ export default function InvitationList() {
   useEffect(() => {
     let mounted = true;
 
-    API.get("/users/invite-user/")
+    API.get("users/invite-user/")
       .then((resp) => {
         const list = extractList(resp);
         if (mounted) setInvitations(list);

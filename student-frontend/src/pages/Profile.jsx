@@ -48,7 +48,7 @@ export default function Profile() {
     setMessage("");
 
     try {
-      const resp = await API.get("/users/my-profile/");
+      const resp = await API.get("users/my-profile/");
       const data = resp.data?.data ?? resp.data;
 
 

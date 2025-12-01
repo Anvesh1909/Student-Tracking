@@ -82,7 +82,7 @@ export default function StudentsList() {
   async function loadBatches() {
     try {
       setLoadingBatches(true);
-      const res = await API.get("/students/batches/");
+      const res = await API.get("students/batches/");
       const root = res?.data ?? res;
       const data = root?.data ?? root;
 

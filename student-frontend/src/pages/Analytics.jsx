@@ -67,7 +67,7 @@ export default function AnalyticsPage() {
     let mounted = true;
     (async () => {
       try {
-        const res = await API.get("/students/batches/");
+        const res = await API.get("students/batches/");
         const list = extractListFromResponse(res);
         if (mounted) setBatches(list);
       } catch (err) {
@@ -98,7 +98,7 @@ export default function AnalyticsPage() {
         month: m,
       };
 
-      const res = await API.get("/students/analytics/monthly-attendance/", { params });
+      const res = await API.get("students/analytics/monthly-attendance/", { params });
       const payload = res?.data ?? res;
       const rows = Array.isArray(payload) ? payload : payload?.data ?? payload ?? [];
 

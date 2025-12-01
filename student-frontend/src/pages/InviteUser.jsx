@@ -79,7 +79,7 @@ export default function InviteUser() {
     try {
       setLoadingBatches(true);
       setBatchError("");
-      const response = await API.get("/students/batches/");
+      const response = await API.get("students/batches/");
       const list = extractListFromResponse(response);
       setBatches(list || []);
     } catch (err) {
@@ -95,7 +95,7 @@ export default function InviteUser() {
     try {
       setInvitesLoading(true);
       setInvitesError("");
-      const resp = await API.get("/users/invite-user/");
+      const resp = await API.get("users/invite-user/");
       const list = extractInviteList(resp);
       setInvitations(list || []);
     } catch (err) {

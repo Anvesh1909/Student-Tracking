@@ -33,7 +33,7 @@ export default function AttendanceBulk() {
   async function loadBatches() {
     try {
       setLoadingBatches(true);
-      const response = await API.get("/students/batches/");
+      const response = await API.get("students/batches/");
       const list = extractListFromResponse(response);
       setBatches(list);
     } catch (err) {
@@ -77,7 +77,7 @@ export default function AttendanceBulk() {
       setMessage(null);
       try {
         // 1) fetch students in batch
-        const studentsResp = await API.get("/students/profile/", {
+          const studentsResp = await API.get("students/profile/", {
           params: { batch_id: selectedBatch },
         });
         const studentsList = extractListFromResponse(studentsResp);
@@ -85,7 +85,7 @@ export default function AttendanceBulk() {
         // 2) fetch existing attendance for batch+date
         let attendanceRecords = [];
         try {
-          const attendanceResp = await API.get("/students/attendance/", {
+          const attendanceResp = await API.get("students/attendance/", {
             params: { batch_id: selectedBatch, date },
           });
           attendanceRecords = extractListFromResponse(attendanceResp);
@@ -159,7 +159,7 @@ export default function AttendanceBulk() {
 
       // Refresh attendance for this batch/date
       try {
-        const attendanceResp = await API.get("/students/attendance/", {
+        const attendanceResp = await API.get("students/attendance/", {
           params: { batch_id: selectedBatch, date },
         });
         const attendanceRecords = extractListFromResponse(attendanceResp);

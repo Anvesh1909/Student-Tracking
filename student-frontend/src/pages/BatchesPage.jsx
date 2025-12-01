@@ -84,7 +84,7 @@ export default function BatchesPage() {
 
   async function loadList() {
     try {
-      const res = await API.get("/students/batches/");
+      const res = await API.get("students/batches/");
       const list = extractListFromResponse(res);
       setBatches(list);
     } catch (err) {

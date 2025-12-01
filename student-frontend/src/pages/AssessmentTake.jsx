@@ -18,7 +18,7 @@ export default function AssessmentTake() {
     let mounted = true;
     (async () => {
       try {
-        const res = await API.get(`/students/assessments/${id}/`);
+        const res = await API.get(`students/assessments/${id}/`);
         const payload = res.data?.data ?? res.data ?? res;
 
         const questionnaire = payload.questionnaire;
@@ -55,7 +55,7 @@ export default function AssessmentTake() {
     setSubmitting(true);
     try {
       const answers = model.data; // { questionName: value }
-      const res = await API.post(`/students/assessments/${id}/submit/`, {
+      const res = await API.post(`students/assessments/${id}/submit/`, {
         answers,
       });
 

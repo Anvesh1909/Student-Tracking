@@ -90,7 +90,7 @@ export default function AssessmentCreate({ initial }) {
     async function loadBatches() {
       setLoadingBatches(true);
       try {
-        const res = await API.get("/students/batches/");
+        const res = await API.get("students/batches/");
         const data = res.data?.data || res.data;
         const results = data?.results || data;
         setBatches(results || []);
@@ -145,7 +145,7 @@ export default function AssessmentCreate({ initial }) {
     };
 
     try {
-      const res = await API.post("/students/assessments/", payload);
+      const res = await API.post("students/assessments/", payload);
       console.log("Saved assessment", res.data);
       setSaving(false);
       alert("Saved assessment");

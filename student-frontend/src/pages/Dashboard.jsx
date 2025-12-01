@@ -54,7 +54,7 @@ export default function Dashboard() {
       setLoadingBatches(true);
       setError(null);
 
-      const response = await API.get("/students/batches/");
+      const response = await API.get("students/batches/");
       const list = extractListFromResponse(response);
 
       setBatches(list || []);
