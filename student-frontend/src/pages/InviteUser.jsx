@@ -125,45 +125,62 @@ export default function InviteUser() {
     }
   }, [batches, form.role, form.batch]);
 
-  const submit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
+const submit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setMessage("");
 
-    try {
-      // Validate: if role is student, batch must be selected
-      if (form.role === "student" && !form.batch) {
-        setMessage("Please select a batch for the student invitation.");
-        setLoading(false);
-        return;
-      }
-
-      const payload = {
-        email: form.email,
-        role: form.role,
-      };
-
-      // Only send batch if not empty
-      if (form.batch) {
-        payload.batch = form.batch;
-      }
-
-      await API.post("/users/invite-user/", payload);
-      setMessage("Invitation sent");
-      setForm({ email: "", role: "student", batch: "" });
-      // reload invitations
-      loadInvitations();
-    } catch (err) {
-      const apiMsg =
-        err?.response?.data?.message ||
-        err?.response?.data?.detail ||
-        err?.response?.data ||
-        "Failed to send";
-      setMessage(typeof apiMsg === "string" ? apiMsg : JSON.stringify(apiMsg));
-    } finally {
+  try {
+    if (form.role === "student" && !form.batch) {
+      setMessage("Please select a batch for the student invitation.");
       setLoading(false);
+      return;
     }
-  };
+
+    const payload = {
+      email: form.email,
+      role: form.role,
+    };
+
+    if (form.batch) {
+      payload.batch = form.batch;
+    }
+
+    // ---- CALL API AND GET THE RESPONSE ----
+    const res = await API.post("/users/invite-user/", payload);
+
+    const invitation = res?.data?.data; // your response structure
+    const invitationUrl = invitation?.invitation_url;
+
+    setMessage("Invitation sent successfully!");
+
+    // Reset form
+    setForm({ email: "", role: "student", batch: "" });
+
+    // Reload table
+    loadInvitations();
+
+    // ---- AUTO REDIRECT USER TO INVITATION ACCEPT PAGE ----
+    if (invitationUrl) {
+      setMessage(`Redirecting user to: ${invitationUrl}`);
+
+      // redirect after 1 second
+      setTimeout(() => {
+        window.location.href = invitationUrl;
+      }, 1200);
+    }
+  } catch (err) {
+    const apiMsg =
+      err?.response?.data?.message ||
+      err?.response?.data?.detail ||
+      err?.response?.data ||
+      "Failed to send";
+    setMessage(typeof apiMsg === "string" ? apiMsg : JSON.stringify(apiMsg));
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const isStudentRole = form.role === "student";
 
